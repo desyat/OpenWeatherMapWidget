@@ -3,6 +3,9 @@ using Toybox.System as Sys;
 using Toybox.WatchUi;
 using Toybox.StringUtil;
 
+// Beta: 50ac2551-8763-44be-8bbd-e333997b0231
+// Prod: 2c3dfe98-f99e-43c7-95da-045af2c71777
+
 function momentToString(moment, is24Hour, showAM) {
 
     if (moment == null) {return "-";}
