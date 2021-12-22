@@ -1,0 +1,25 @@
+<resources>
+    <properties>
+    	<property id="api_key" type="string"></property>
+    	<property id="refresh_rate" type="number">60</property>
+    	<property id="use_garmin_location" type="boolean">false</property>
+    	<property id="units" type="string">Set in Watch settings</property>
+    </properties>
+
+    <settings>
+        <setting propertyKey="@Properties.api_key" title="@Strings.APIKeyTitle" ><settingConfig type="alphaNumeric"/></setting>
+        <setting propertyKey="@Properties.refresh_rate" title="@Strings.RefreshRateTitle">
+            <settingConfig type="list">
+            <listEntry value="0">@Strings.m0</listEntry>
+            <listEntry value="15">@Strings.m15</listEntry>
+            <listEntry value="30">@Strings.m30</listEntry>
+            <listEntry value="60">@Strings.m60</listEntry>
+            <listEntry value="120">@Strings.m120</listEntry>
+            <listEntry value="180">@Strings.m180</listEntry>
+            <listEntry value="240">@Strings.m240</listEntry>
+            </settingConfig>
+		</setting>
+        <setting propertyKey="@Properties.use_garmin_location" title="@Strings.UseGarminLocationTitle" ><settingConfig type="boolean" /></setting>
+        <setting propertyKey="@Properties.units" title="@Strings.UnitsTitle"><settingConfig type="alphaNumeric" readonly="true"/></setting>
+    </settings>
+</resources>

@@ -1,0 +1,27 @@
+<strings>
+    <string id="AppName">Open Weather</string>
+
+    <string id="m0">Never, refresh on the app start only</string>
+    <string id="m15">15 min</string>
+    <string id="m30">30 min</string>
+    <string id="m60">1 hour</string>
+    <string id="m120">2 hours</string>
+    <string id="m180">3 hours</string>
+    <string id="m240">4 hours</string>
+
+    <string id="APIKeyTitle">Open Weather Map API key</string>
+    <string id="RefreshRateTitle">Weather refresh interval</string>
+    <string id="UseGarminLocationTitle">Use phone location provided by Garmin Weather (if available)</string>
+    <string id="UnitsTitle">Temperature and Wind speed units</string>
+
+    <string id="NoLocation">No location for\nweather. Please\ncheck the app\ndescription.</string>
+    <string id="NoData">No Data.\nCheck Internet\nconnection.</string>
+    <string id="InvalidData">Invalid OWM Data</string>
+    <string id="InvalidKey">Invalid OWM API key</string>
+    <string id="InvalidLocation">Invalid Location</string>
+    <string id="SuspendedKey">Suspended OWM\nAPI key</string>
+    <string id="OWMerror">OWM Error:</string>
+    <string id="NoAPIkey">Please set Open\nWeather API key in\nsettings.</string>
+
+</strings>
+
