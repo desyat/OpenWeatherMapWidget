@@ -23,7 +23,7 @@ class OpenWeatherWidgetApp extends App.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() as Array<Views or InputDelegates>? {
-    	$.p("getInitialView");
+    	//$.p("getInitialView");
     	mainView = new OpenWeatherWidgetView();
 	    	
     	// Check for glances. Don't re-do settings and Weather event if enabled
@@ -36,7 +36,7 @@ class OpenWeatherWidgetApp extends App.AppBase {
 
     // Called when the application settings have been changed by Garmin Connect Mobile
     function onSettingsChanged() {
-    	$.p("onSettingsChanged");
+    	//$.p("onSettingsChanged");
     	if (mainView != null) {mainView.updateSettings();}
     	setWeatherEvent();
     	Ui.requestUpdate();
@@ -47,13 +47,13 @@ class OpenWeatherWidgetApp extends App.AppBase {
 	}
 
     function getGlanceView() {
-    	$.p("getGlanceView");
+    	//$.p("getGlanceView");
     	setWeatherEvent();
         return [new OpenWeatherGlancetView()];
     }
 
 	function onBackgroundData(data) {
-		$.p(data);
+		//$.p(data);
 		Application.Storage.setValue("weather", data);
 		Ui.requestUpdate();
 	}

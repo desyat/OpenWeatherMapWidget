@@ -49,7 +49,7 @@ function makeOWMwebRequest(runInBackground) {
 			"appid" => apiKey,
 			"units" => "metric" // Celcius
 		};
-		$.p(params);
+		//$.p(params);
 		var callBack;
 		if (runInBackground) {
 			callBack = new Lang.Method($, :onReceiveOpenWeatherMapBackground);
@@ -57,7 +57,7 @@ function makeOWMwebRequest(runInBackground) {
 			callBack = new Lang.Method($, :onReceiveOpenWeatherMapForeground);
 		}
 		Comms.makeWebRequest("https://api.openweathermap.org/data/2.5/weather", params, options, callBack);
-	} else {$.p("No Location");}
+	}
 }
 
 (:background)
@@ -74,7 +74,7 @@ function onReceiveOpenWeatherMapForeground(responseCode, data) {
 (:background)
 function openWeatherMapData(responseCode, data) {
 	var result;
-	$.p(responseCode);
+	//$.p(responseCode);
 	if (responseCode == 200) {
 		result = [responseCode,
 			data["weather"][0]["id"],			// 1 - Condition ID (800)
@@ -118,7 +118,7 @@ function getLocation() {
 	// Get Location from Activity
 	var activityLoc = Activity.getActivityInfo().currentLocation;
 	if (activityLoc != null) {
-		$.p("Location obtained from Activity");
+		//$.p("Location obtained from Activity");
 		var loc = activityLoc.toDegrees();
 		saveLocation(loc);
 		return loc;

@@ -11,7 +11,7 @@ class OpenWeatherWidgetDelegate extends Ui.BehaviorDelegate {
     }
 
     function onSelect() {
-        $.p("onSelect");
+        //$.p("onSelect");
         mainView.screenNum = mainView.screenNum == 1 ? 2 : 1;
         Ui.requestUpdate();
     }

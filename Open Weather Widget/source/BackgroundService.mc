@@ -12,7 +12,7 @@ class BackgroundService extends Sys.ServiceDelegate {
 
 	// onTemporalEvent is called in background
 	function onTemporalEvent() {
-		$.p("onTemporalEvent");
+		//$.p("onTemporalEvent");
 		$.makeOWMwebRequest(true);
 	}
 }

@@ -57,12 +57,12 @@ class OpenWeatherWidgetView extends Ui.View {
     // the state of this View and prepare it to be shown. This includes
     // loading resources into memory.
     function onShow() as Void {
-    	$.p("View onShow");
+    	//$.p("View onShow");
     	updateTimer.start(method(:onTimerUpdate), 10000, true);
     }
 
     function onHide() as Void {
-    	$.p("View onHide");
+    	//$.p("View onHide");
     	updateTimer.stop();
     }
 	

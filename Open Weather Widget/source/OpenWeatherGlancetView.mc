@@ -12,25 +12,23 @@ class OpenWeatherGlancetView extends Ui.GlanceView {
 	var settingsArr = $.getSettings();
 	
     function initialize() {
-    	p("GlanceView initialize");
+    	//p("GlanceView initialize");
         GlanceView.initialize();
     }
 
     // Load your resources here
     function onLayout(dc as Dc) as Void {
-    	p("Glance onLayout");
+    	//p("Glance onLayout");
     	GW = dc.getWidth();
     	GH = dc.getHeight();
-    	p(GW);
-    	p(GH);
     }
 
-    function onShow() as Void {$.p("Glance onShow");}
+    function onShow() as Void {}
 
     // Update the view
     function onUpdate(dc as Dc) as Void {
         GlanceView.onUpdate(dc);
-    	p("Glance onUpdate");
+    	//p("Glance onUpdate");
     	dc.setColor(0, G.COLOR_BLACK);
         dc.clear();
         dc.setColor(G.COLOR_WHITE, -1);
@@ -63,7 +61,7 @@ class OpenWeatherGlancetView extends Ui.GlanceView {
         dc.drawText(0, GH*0.75, G.FONT_SYSTEM_TINY, str, G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
     }
 
-    function onHide() as Void {p("Glance onHide");}
+    function onHide() as Void {}
 
 	function p(s) {System.println(s);}
 }
