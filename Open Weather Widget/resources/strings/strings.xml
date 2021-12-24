@@ -23,5 +23,6 @@
     <string id="OWMerror">OWM Error:</string>
     <string id="NoAPIkey">Please set Open\nWeather API key in\nsettings.</string>
 
+    <string id="RefreshNow">Refresh now</string>
 </strings>
 

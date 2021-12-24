@@ -67,8 +67,11 @@ function onReceiveOpenWeatherMapBackground(responseCode, data) {
 
 (:glance)
 function onReceiveOpenWeatherMapForeground(responseCode, data) {
-	App.Storage.setValue("weather", openWeatherMapData(responseCode, data));
-	WatchUi.requestUpdate();
+	// Process only if no BLE error
+	if (responseCode > 0) {
+		App.Storage.setValue("weather", openWeatherMapData(responseCode, data));
+		WatchUi.requestUpdate();
+	}
 }
 
 (:background)
@@ -108,7 +111,7 @@ function getLocation() {
 	if (useGarminLocation && Toybox has :Weather) {
 		var w = Weather.getCurrentConditions();
 		if (w != null && w.observationLocationPosition != null) {
-	    	$.p("Location obtained from Weather");
+	    	//$.p("Location obtained from Weather");
 	    	var loc = w.observationLocationPosition.toDegrees();
 	    	saveLocation(loc);
 	    	return loc;

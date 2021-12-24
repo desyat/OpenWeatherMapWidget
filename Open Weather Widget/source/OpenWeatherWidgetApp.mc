@@ -54,8 +54,11 @@ class OpenWeatherWidgetApp extends App.AppBase {
 
 	function onBackgroundData(data) {
 		//$.p(data);
-		Application.Storage.setValue("weather", data);
-		Ui.requestUpdate();
+		// Process only if no BLE error
+		if (data[0] > 0) {
+			Application.Storage.setValue("weather", data);
+			Ui.requestUpdate();
+		}
 	}
 	
 	function setWeatherEvent() {
