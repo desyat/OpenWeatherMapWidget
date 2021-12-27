@@ -69,7 +69,7 @@ class OpenWeatherWidgetView extends Ui.View {
     function onTimerUpdate() {
     	Ui.requestUpdate();
     }
-
+ 
     // Update the view
     function onUpdate(dc as Dc) as Void {
         View.onUpdate(dc);
