@@ -79,7 +79,7 @@ class OpenWeatherWidgetView extends Ui.View {
         
     	dc.setColor(0, G.COLOR_BLACK);
         dc.clear();
-        
+       
         // Retrieve weather data
         var weatherData = App.Storage.getValue("weather");
         
