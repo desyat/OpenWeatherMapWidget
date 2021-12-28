@@ -1,3 +1,4 @@
+using Toybox.Application as App;
 using Toybox.Time;
 using Toybox.System as Sys;
 using Toybox.WatchUi;
@@ -70,15 +71,35 @@ function getSettings() {
 	var KMH_IN_METERS_PER_SECOND = 3.6;
 	var KTS_IN_METERS_PER_SECOND = 1.944;
 	
-	var settingsArr = [KMH_IN_METERS_PER_SECOND, "kmh", true, $.DEGREE_SYMBOL];
+	var settingsArr = [KMH_IN_METERS_PER_SECOND, "kmh", true, $.DEGREE_SYMBOL, 1];
 
+	var speed_units = App.Properties.getValue("speed_units");
+	speed_units = speed_units == null ? 0 : speed_units;
+	settingsArr[4] = speed_units;
+	
 	var deviceSettings = Sys.getDeviceSettings();
 	// Speed multiplier and units
-	settingsArr[0] = KMH_IN_METERS_PER_SECOND;
-	settingsArr[1] = "kmh";
-	if (deviceSettings.distanceUnits == Sys.UNIT_STATUTE) {
+	if (speed_units == 0) {
+		settingsArr[0] = KMH_IN_METERS_PER_SECOND;
+		settingsArr[1] = "kmh";
+		settingsArr[4] = 1;
+		if (deviceSettings.distanceUnits == Sys.UNIT_STATUTE) {
+			settingsArr[0] = MPH_IN_METERS_PER_SECOND;
+			settingsArr[1] = "mph";
+			settingsArr[4] = 2;
+		}
+	} else if (speed_units == 1) {
+		settingsArr[0] = KMH_IN_METERS_PER_SECOND;
+		settingsArr[1] = "kmh";
+	} else if (speed_units == 2) {
 		settingsArr[0] = MPH_IN_METERS_PER_SECOND;
 		settingsArr[1] = "mph";
+	} else if (speed_units == 3) {
+		settingsArr[0] = KTS_IN_METERS_PER_SECOND;
+		settingsArr[1] = "kts";
+	} else if (speed_units == 4) {
+		settingsArr[0] = 1;
+		settingsArr[1] = "mps";
 	}
 	// Temperature in Celsius
 	settingsArr[2] = !(deviceSettings.temperatureUnits == Sys.UNIT_STATUTE);

@@ -12,10 +12,19 @@
     <string id="APIKeyTitle">Open Weather Map API key</string>
     <string id="RefreshRateTitle">Weather refresh interval</string>
     <string id="UseGarminLocationTitle">Use phone location provided by Garmin Weather (if available)</string>
-    <string id="UnitsTitle">Temperature and Wind speed units</string>
+    <string id="SpeedUnitsTitle">Speed units</string>
+    <string id="UnitsTitle">Temperature units</string>
 
-    <string id="NoLocation">No location for\nweather. Please\ncheck the app\ndescription.</string>
-    <string id="NoData">No Data.\nCheck Internet\nconnection.</string>
+    <string id="SystemSpeed">System (Pace/Speed)</string>
+    <string id="kmh">KM/H</string>
+    <string id="mph">MPH</string>
+    <string id="kts">Knots</string>
+    <string id="mps">Meters/Sec</string>
+
+    <string id="NoLocation">No location.\nPress MENU button\n to use GPS.</string>
+    <string id="WaitForGPS">Waiting for\nGPS signal. Please\n stay on this\n screen...</string>
+    
+    <string id="NoData">Internet\nrequest sent,\nwaiting for data...\n</string>
     <string id="InvalidData">Invalid OWM Data</string>
     <string id="InvalidKey">Invalid OWM API key</string>
     <string id="InvalidLocation">Invalid Location</string>
@@ -23,6 +32,7 @@
     <string id="OWMerror">OWM Error:</string>
     <string id="NoAPIkey">Please set Open\nWeather API key in\nsettings.</string>
 
-    <string id="RefreshNow">Refresh now</string>
+    <string id="RefreshWeather">Request Weather refresh</string>
+    <string id="GetGPSlocation">Get location from GPS</string>
 </strings>
 

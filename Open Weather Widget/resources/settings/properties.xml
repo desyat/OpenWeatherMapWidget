@@ -3,6 +3,7 @@
     	<property id="api_key" type="string"></property>
     	<property id="refresh_rate" type="number">60</property>
     	<property id="use_garmin_location" type="boolean">true</property>
+    	<property id="speed_units" type="number">0</property>
     	<property id="units" type="string">Set in Watch settings</property>
     </properties>
 
@@ -20,6 +21,15 @@
             </settingConfig>
 		</setting>
         <setting propertyKey="@Properties.use_garmin_location" title="@Strings.UseGarminLocationTitle" ><settingConfig type="boolean" /></setting>
+        <setting propertyKey="@Properties.speed_units" title="@Strings.SpeedUnitsTitle">
+            <settingConfig type="list">
+            <listEntry value="0">@Strings.SystemSpeed</listEntry>
+            <listEntry value="1">@Strings.kmh</listEntry>
+            <listEntry value="2">@Strings.mph</listEntry>
+            <listEntry value="3">@Strings.kts</listEntry>
+            <listEntry value="4">@Strings.mps</listEntry>
+            </settingConfig>
+		</setting>
         <setting propertyKey="@Properties.units" title="@Strings.UnitsTitle"><settingConfig type="alphaNumeric" readonly="true"/></setting>
     </settings>
 </resources>

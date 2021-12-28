@@ -18,13 +18,7 @@ class OpenWeatherWidgetDelegate extends Ui.BehaviorDelegate {
     }
 
     function onMenu() {
-        //$.p("onMenu");
-        // Refresh Data immediatelly on Menu press
-        makeOWMwebRequest(false);
-        if (Attention has :vibrate) {
-		    var vibeData = [ new Attention.VibeProfile(100, 300)]; // 100% for 300 mseconds
-		    Attention.vibrate(vibeData);
-		}
+        WatchUi.pushView(new MenuSettingsView(), new MenuSettingsDelegate(mainView), WatchUi.SLIDE_IMMEDIATE);
         return true;
     }
 }

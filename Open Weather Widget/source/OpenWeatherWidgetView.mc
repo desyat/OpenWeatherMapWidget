@@ -5,6 +5,7 @@ using Toybox.WatchUi as Ui;
 using Toybox.System as Sys;
 using Toybox.Communications as Comms;
 using Toybox.Application as App;
+using Toybox.Position;
 
 class OpenWeatherWidgetView extends Ui.View {
 
@@ -12,6 +13,7 @@ class OpenWeatherWidgetView extends Ui.View {
 	var H;
 	var iconsFont;
 	var screenNum = 1;
+	var gpsRequested = false;
 
 	var updateTimer = new Timer.Timer();
 	var settingsArr = $.getSettings();
@@ -70,6 +72,21 @@ class OpenWeatherWidgetView extends Ui.View {
     	Ui.requestUpdate();
     }
  
+    function startGPS() {
+        $.p("startGPS");
+        Position.enableLocationEvents(Position.LOCATION_ONE_SHOT, method(:onPosition));
+        gpsRequested = true;
+        WatchUi.requestUpdate();
+    }
+
+    function onPosition(info) {
+        $.p("onPosition");
+        if (info == null || info.position == null) {return;}
+        $.saveLocation(info.position.toDegrees());
+        WatchUi.requestUpdate();
+        $.makeOWMwebRequest(false);
+	}
+
     // Update the view
     function onUpdate(dc as Dc) as Void {
         View.onUpdate(dc);
@@ -89,7 +106,8 @@ class OpenWeatherWidgetView extends Ui.View {
 		if (apiKey == null || apiKey.length() == 0) {
         	errorMessage = R(Rez.Strings.NoAPIkey);
         } else if (App.Storage.getValue("last_location") == null) {
-        	errorMessage = R(Rez.Strings.NoLocation);
+        	if (gpsRequested) {errorMessage = R(Rez.Strings.WaitForGPS);}
+        	else {errorMessage = R(Rez.Strings.NoLocation);}
         } else if (weatherData == null) {
         	errorMessage = R(Rez.Strings.NoData);
         } else if (weatherData[0] == 401) {
@@ -151,8 +169,9 @@ class OpenWeatherWidgetView extends Ui.View {
 		else {weatherImage = Ui.loadResource(Rez.Drawables.iq_icon);}
 
 		// Temperature
-		str = (settingsArr[2] ? weatherData[10].format("%.0f") : celsius2fahrenheit(weatherData[10]).format("%.0f")) + $.DEGREE_SYMBOL;
-       	drawStr(dc, 53, 15, G.FONT_SYSTEM_NUMBER_MEDIUM, 0xFFFF00, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+		str = (settingsArr[2] ? weatherData[10].format("%.0f") : celsius2fahrenheit(weatherData[10]).format("%.0f")); //+ $.DEGREE_SYMBOL;
+       	drawStr(dc, 50, 15, G.FONT_SYSTEM_NUMBER_MEDIUM, 0xFFFF00, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+       	drawStr(dc, str.length() > 2 ? 75 : 67, 15, G.FONT_SYSTEM_SMALL, 0xFFFF00, settingsArr[3], G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
        	
 		// Feels like
 		str = "~ " + (settingsArr[2] ? weatherData[11].format("%.0f") : celsius2fahrenheit(weatherData[11]).format("%.0f")) + settingsArr[3];
@@ -188,7 +207,7 @@ class OpenWeatherWidgetView extends Ui.View {
        	drawStr(dc, 50, 61, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str.substring(0, 21), G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 		
 		// Wind
-		str = (weatherData[14] * settingsArr[0]).format("%.0f") + " / " + (weatherData[15] * settingsArr[0]).format("%.0f") + " " + settingsArr[1];
+		str = (weatherData[14] * settingsArr[0]).format(settingsArr[4] == 4 ? "%.1f" : "%.0f") + " / " + (weatherData[15] * settingsArr[0]).format(settingsArr[4] == 4 ? "%.1f" : "%.0f") + " " + settingsArr[1];
        	drawStr(dc, 50, 78, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
        	drawStr(dc, 15, 78, iconsFont, G.COLOR_LT_GRAY, "\uF050", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 
