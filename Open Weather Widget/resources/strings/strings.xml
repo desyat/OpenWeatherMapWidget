@@ -1,5 +1,6 @@
 <strings>
     <string id="AppName">Open Weather</string>
+	<string id="AppVersion">4</string>
 
     <string id="m0">Never, refresh on the app start only</string>
     <string id="m15">15 min</string>
@@ -21,10 +22,15 @@
     <string id="kts">Knots</string>
     <string id="mps">Meters/Sec</string>
 
+	<string id="PressureUnitsTitle">Pressure Units</string>
+	<string id="hPa">hPa</string>
+	<string id="inHG">inHG</string>
+	<string id="mmHG">mmHG</string>
+
     <string id="NoLocation">No location.\nPress MENU button\n to use GPS.</string>
     <string id="WaitForGPS">Waiting for\nGPS signal. Please\n stay on this\n screen...</string>
     
-    <string id="NoData">Internet\nrequest sent,\nwaiting for data...\n</string>
+    <string id="NoData">Waiting for data...</string>
     <string id="InvalidData">Invalid OWM Data</string>
     <string id="InvalidKey">Invalid OWM API key</string>
     <string id="InvalidLocation">Invalid Location</string>
@@ -34,5 +40,6 @@
 
     <string id="RefreshWeather">Request Weather refresh</string>
     <string id="GetGPSlocation">Get location from GPS</string>
+	<string id="AppVersionTitle">App Version</string>
 </strings>
 

@@ -7,6 +7,7 @@ using Toybox.StringUtil;
 // Beta: 50ac2551-8763-44be-8bbd-e333997b0231
 // Prod: 2c3dfe98-f99e-43c7-95da-045af2c71777
 
+
 function momentToString(moment, is24Hour, showAM) {
 
     if (moment == null) {return "-";}
@@ -23,7 +24,6 @@ function momentToString(moment, is24Hour, showAM) {
     return text;
 }
 
-(:glance)
 function capitalize(s) {
 	if (s == null || s.length() == 0) {return s;}
 	return s.substring(0,1).toUpper() + (s.length() == 1 ? "" : s.substring(1, s.length()).toLower());
@@ -31,10 +31,6 @@ function capitalize(s) {
 
 function R(s) {return WatchUi.loadResource(s);}
 
-(:background)
-function p(p) {Sys.println(p);}
-
-(:glance)
 function celsius2fahrenheit(c) {return (c * 1.8) + 32;}
 
 function windDegreeToName (windDegree) {
@@ -61,17 +57,15 @@ function windDegreeToName (windDegree) {
 	return windName;
 }
 
-(:background)
-const DEGREE_SYMBOL = StringUtil.utf8ArrayToString([0xC2,0xB0]); //"\u00B0"
+const DEGREE_SYMBOL = "\u00B0";
 
-(:glance)
 function getSettings() {
 
 	var MPH_IN_METERS_PER_SECOND = 2.23694;
 	var KMH_IN_METERS_PER_SECOND = 3.6;
 	var KTS_IN_METERS_PER_SECOND = 1.944;
 	
-	var settingsArr = [KMH_IN_METERS_PER_SECOND, "kmh", true, $.DEGREE_SYMBOL, 1];
+	var settingsArr = [KMH_IN_METERS_PER_SECOND, "kmh", true, $.DEGREE_SYMBOL, 1, 1];
 
 	var speed_units = App.Properties.getValue("speed_units");
 	speed_units = speed_units == null ? 0 : speed_units;
@@ -107,5 +101,14 @@ function getSettings() {
 	if (settingsArr[2]) {settingsArr[3] = $.DEGREE_SYMBOL + "C";}
 	else {settingsArr[3] = $.DEGREE_SYMBOL + "F";}
 	
+	// Pressure units
+	var pressureUnits = App.Properties.getValue("pres_units");
+	pressureUnits = pressureUnits == null ? 0 : pressureUnits;
+	if (pressureUnits == 1) {settingsArr[5] = 33.8639;}
+	else if (pressureUnits == 2) {settingsArr[5] = 1.33322;}
+
 	return settingsArr;
 }
+
+(:background)
+function p(p) {Sys.println(p);}

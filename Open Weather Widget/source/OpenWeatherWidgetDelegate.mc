@@ -11,14 +11,26 @@ class OpenWeatherWidgetDelegate extends Ui.BehaviorDelegate {
         BehaviorDelegate.initialize();
     }
 
+    function onNextPage() {
+        return nextScreen();
+    }
+
+    function onPreviousPage() {
+        return nextScreen();
+    }
+
     function onSelect() {
-        //$.p("onSelect");
-        mainView.screenNum = mainView.screenNum == 1 ? 2 : 1;
-        Ui.requestUpdate();
+        return nextScreen();
     }
 
     function onMenu() {
         WatchUi.pushView(new MenuSettingsView(), new MenuSettingsDelegate(mainView), WatchUi.SLIDE_IMMEDIATE);
+        return true;
+    }
+
+	function nextScreen() {
+        mainView.screenNum = mainView.screenNum == 1 ? 2 : 1;
+        Ui.requestUpdate();
         return true;
     }
 }

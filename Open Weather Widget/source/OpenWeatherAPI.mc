@@ -1,4 +1,3 @@
-using Toybox.WatchUi;
 using Toybox.Background as Bg;
 using Toybox.System as Sys;
 using Toybox.Communications as Comms;
@@ -8,7 +7,7 @@ using Toybox.Weather;
 using Toybox.Lang;
 
 (:background)
-function makeOWMwebRequest(runInBackground) {
+function makeOWMwebRequest(callBack) {
 	//p("makeOWMwebRequest");
 	var options = {
 		:method => Comms.HTTP_REQUEST_METHOD_GET,
@@ -24,7 +23,7 @@ function makeOWMwebRequest(runInBackground) {
 	}
 	
 	// Location
-	var loc = getLocation();
+	var loc = $.getLocation();
 	
 	// Language
 	var lang = "en";
@@ -49,29 +48,14 @@ function makeOWMwebRequest(runInBackground) {
 			"appid" => apiKey,
 			"units" => "metric" // Celcius
 		};
-		//$.p(params);
-		var callBack;
-		if (runInBackground) {
-			callBack = new Lang.Method($, :onReceiveOpenWeatherMapBackground);
-		} else {
-			callBack = new Lang.Method($, :onReceiveOpenWeatherMapForeground);
-		}
-		Comms.makeWebRequest("https://api.openweathermap.org/data/2.5/weather", params, options, callBack);
+		Comms.makeWebRequest("https://api.openweathermap.org/data/2.5/weather", params, options, (callBack == null ? new Lang.Method($, :onReceiveOpenWeatherMapBackground) : callBack));
 	}
 }
 
 (:background)
 function onReceiveOpenWeatherMapBackground(responseCode, data) {
-	Bg.exit(openWeatherMapData(responseCode, data));
-}
-
-(:glance)
-function onReceiveOpenWeatherMapForeground(responseCode, data) {
-	// Process only if no BLE error
-	if (responseCode > 0) {
-		App.Storage.setValue("weather", openWeatherMapData(responseCode, data));
-		WatchUi.requestUpdate();
-	}
+	//$.p("onReceiveOpenWeatherMapBackground: " + responseCode.format("%.0f"));
+	Bg.exit($.openWeatherMapData(responseCode, data));
 }
 
 (:background)

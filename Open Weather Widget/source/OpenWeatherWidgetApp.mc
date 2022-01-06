@@ -47,9 +47,7 @@ class OpenWeatherWidgetApp extends App.AppBase {
 	}
 
     function getGlanceView() {
-    	//$.p("getGlanceView");
-    	setWeatherEvent();
-        return [new OpenWeatherGlancetView()];
+        return [new OpenWeatherGlanceView()];
     }
 
 	function onBackgroundData(data) {
@@ -62,24 +60,19 @@ class OpenWeatherWidgetApp extends App.AppBase {
 	}
 	
 	function setWeatherEvent() {
+		Bg.deleteTemporalEvent();
 		// If location is not obtained yet, do not run OWM
 		if ($.getLocation() == null) {return;}
 		// If API key is not set, do not run OWM
 		var apiKey = App.Properties.getValue("api_key");
 		if (apiKey == null || apiKey.length() == 0) {return;}
 		
-		// Check if API key was invalid. Connect to OWM immediatelly if it was
-		var weatherData = App.Storage.getValue("weather");
-		var invalidKey = false;
-		if (weatherData != null && weatherData[0] == 401) {invalidKey = true;}
-		
+    	// Submit background event if refresh rate set
     	var rate = Application.Properties.getValue("refresh_rate");
     	rate = rate == null ? 0 : rate;
-    	if (rate == 0 || invalidKey) {
-    		Bg.deleteTemporalEvent();
-    		$.makeOWMwebRequest(false);
+    	if (rate > 0) {
+    		Bg.registerForTemporalEvent(new Time.Duration(rate * 60));
     	}
-    	else {Bg.registerForTemporalEvent(new Time.Duration(rate * 60));}
 	}
 }
 

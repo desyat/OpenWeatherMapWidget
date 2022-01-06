@@ -6,6 +6,7 @@ using Toybox.System as Sys;
 using Toybox.Communications as Comms;
 using Toybox.Application as App;
 using Toybox.Position;
+using Toybox.Timer;
 
 class OpenWeatherWidgetView extends Ui.View {
 
@@ -17,6 +18,12 @@ class OpenWeatherWidgetView extends Ui.View {
 
 	var updateTimer = new Timer.Timer();
 	var settingsArr = $.getSettings();
+    var apiKeyPresent = false;
+    var locationPresent = false;
+    
+	var weatherData = null;
+	var owmRetryCount = 5;
+	var owmTimer = new Timer.Timer();
 
 	var iconsDictionary = {
 		"01d" => Rez.Drawables.d01,
@@ -45,6 +52,8 @@ class OpenWeatherWidgetView extends Ui.View {
 
     function updateSettings() {
     	settingsArr = $.getSettings();
+
+    	checkApiAndLocation();
 	}
 
     // Load your resources here
@@ -53,8 +62,20 @@ class OpenWeatherWidgetView extends Ui.View {
     	H = dc.getHeight();
     	
     	iconsFont = WatchUi.loadResource(Rez.Fonts.owm_font);
+    	
+    	checkApiAndLocation();
+    	
+    	// Get Weather data
+    	weatherData = App.Storage.getValue("weather");
+        owmRequest();
     }
 
+	function checkApiAndLocation() {
+    	var apiKey = App.Properties.getValue("api_key");
+		apiKeyPresent = (apiKey != null && apiKey.length() > 0);
+		locationPresent = (App.Storage.getValue("last_location") != null);
+	}
+	
     // Called when this View is brought to the foreground. Restore
     // the state of this View and prepare it to be shown. This includes
     // loading resources into memory.
@@ -83,8 +104,9 @@ class OpenWeatherWidgetView extends Ui.View {
         $.p("onPosition");
         if (info == null || info.position == null) {return;}
         $.saveLocation(info.position.toDegrees());
+        locationPresent = true;
         WatchUi.requestUpdate();
-        $.makeOWMwebRequest(false);
+        owmRequest();
 	}
 
     // Update the view
@@ -97,15 +119,11 @@ class OpenWeatherWidgetView extends Ui.View {
     	dc.setColor(0, G.COLOR_BLACK);
         dc.clear();
        
-        // Retrieve weather data
-        var weatherData = App.Storage.getValue("weather");
-        
         var errorMessage = "";
         
-        var apiKey = App.Properties.getValue("api_key");
-		if (apiKey == null || apiKey.length() == 0) {
+		if (!apiKeyPresent) {
         	errorMessage = R(Rez.Strings.NoAPIkey);
-        } else if (App.Storage.getValue("last_location") == null) {
+        } else if (!locationPresent) {
         	if (gpsRequested) {errorMessage = R(Rez.Strings.WaitForGPS);}
         	else {errorMessage = R(Rez.Strings.NoLocation);}
         } else if (weatherData == null) {
@@ -116,7 +134,7 @@ class OpenWeatherWidgetView extends Ui.View {
         	errorMessage = R(Rez.Strings.InvalidLocation);
         } else if (weatherData[0] == 429) {
         	errorMessage = R(Rez.Strings.SuspendedKey);
-        } else if (weatherData[0] != 200) {
+        } else if (weatherData[0] != 200 && weatherData[0] > 0) {
         	errorMessage = R(Rez.Strings.OWMerror) + " " + weatherData[0];
         } else if (weatherData.size() < 17) {
         	errorMessage = R(Rez.Strings.InvalidData);
@@ -169,9 +187,19 @@ class OpenWeatherWidgetView extends Ui.View {
 		else {weatherImage = Ui.loadResource(Rez.Drawables.iq_icon);}
 
 		// Temperature
-		str = (settingsArr[2] ? weatherData[10].format("%.0f") : celsius2fahrenheit(weatherData[10]).format("%.0f")); //+ $.DEGREE_SYMBOL;
-       	drawStr(dc, 50, 15, G.FONT_SYSTEM_NUMBER_MEDIUM, 0xFFFF00, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
-       	drawStr(dc, str.length() > 2 ? 75 : 67, 15, G.FONT_SYSTEM_SMALL, 0xFFFF00, settingsArr[3], G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+		var convertedTemp = Math.round(settingsArr[2] ? weatherData[10] : celsius2fahrenheit(weatherData[10]));
+		var tempNegative = false;
+		if (convertedTemp < 0) {
+			tempNegative = true;
+			convertedTemp = -1 * convertedTemp;
+		}
+		str = convertedTemp.format("%.0f");
+		var tempWidth = dc.getTextWidthInPixels(str, G.FONT_SYSTEM_NUMBER_MEDIUM) / 2;
+       	drawStr(dc, 50, 14, G.FONT_SYSTEM_NUMBER_MEDIUM, 0xFFFF00, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+
+       	if (tempNegative) {dc.drawText(W / 2 - tempWidth, H * 14 / 100, G.FONT_SYSTEM_NUMBER_MEDIUM, "-", G.TEXT_JUSTIFY_RIGHT | G.TEXT_JUSTIFY_VCENTER);}
+       	dc.drawText(W / 2 + tempWidth + 5, H * 14 / 100, G.FONT_SYSTEM_MEDIUM, settingsArr[3], G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
+       	//drawStr(dc, str.length() > 2 ? 75 : 67, 15, G.FONT_SYSTEM_SMALL, 0xFFFF00, settingsArr[3], G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
        	
 		// Feels like
 		str = "~ " + (settingsArr[2] ? weatherData[11].format("%.0f") : celsius2fahrenheit(weatherData[11]).format("%.0f")) + settingsArr[3];
@@ -184,9 +212,9 @@ class OpenWeatherWidgetView extends Ui.View {
 	       	drawStr(dc, 81, 30, iconsFont, G.COLOR_LT_GRAY, "\uF078", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 	    } else {
 			// Pressure
-			str = weatherData[13].format("%.0f");
+			str = (weatherData[13] / settingsArr[5]).format(settingsArr[5] > 2 ? "%.2f" : "%.0f");
 	       	drawStr(dc, 66, 30, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
-	       	drawStr(dc, 81, 30, iconsFont, G.COLOR_LT_GRAY, "\uF079", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+	       	drawStr(dc, 82, 30, iconsFont, G.COLOR_LT_GRAY, "\uF079", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 	    }
 
        	// Condition
@@ -203,7 +231,9 @@ class OpenWeatherWidgetView extends Ui.View {
 		// Time and location
 		var t = (Time.now().value() - weatherData[7]) / 60;
 		t = t < 0 ? 0 : t;
-		str = t.format("%.0f") + " min, " + weatherData[5];
+		if (t < 120) {str = t.format("%.0f") + " min, ";}
+		else {str = (t / 60.0).format("%.0f") + " hr, ";}
+		str += weatherData[5];
        	drawStr(dc, 50, 61, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str.substring(0, 21), G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 		
 		// Wind
@@ -227,4 +257,26 @@ class OpenWeatherWidgetView extends Ui.View {
     	dc.setColor(color, G.COLOR_TRANSPARENT);
     	dc.drawText(W * x / 100, H * y / 100, font, str, alignment);
     }
+
+	function owmRequest() {
+		owmRetryCount = 5;
+		$.makeOWMwebRequest(method(:onReceiveOpenWeatherMap));
+	}
+
+	// OWM online response call back
+	function onReceiveOpenWeatherMap(responseCode, data) {
+		// Process only if no BLE error
+		if (responseCode > 0) {
+			weatherData = $.openWeatherMapData(responseCode, data);
+			App.Storage.setValue("weather", weatherData);
+			Ui.requestUpdate();
+		}
+
+		// Re-submit request if there is an error
+		if (owmRetryCount > 0 && responseCode <= 0) {
+			owmRetryCount -= 1;
+			owmTimer = new Timer.Timer();
+			owmTimer.start(method(:owmRequest), 5000 - (owmRetryCount * 1000), false);
+		}
+	}
 }

@@ -17,6 +17,7 @@ class MenuSettingsView extends WatchUi.Menu2 {
 		if ($.getLocation() != null) {
 			Menu2.addItem(new WatchUi.MenuItem(R(Rez.Strings.RefreshWeather), null, 1, null));
 		}
+		Menu2.addItem(new WatchUi.MenuItem(R(Rez.Strings.AppVersionTitle), R(Rez.Strings.AppVersion), 3, null));
     }
 }
 
@@ -34,12 +35,14 @@ class MenuSettingsDelegate extends WatchUi.Menu2InputDelegate {
   		var id=item.getId();
   		if (id.equals(1)) {
 	        // Refresh Data immediatelly on Menu press
-	        $.makeOWMwebRequest(false);
+	        mainView.owmRequest();
 	        vibrate();
 	        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		} else if (id.equals(2)) {
 			mainView.startGPS();
 			vibrate();
+  			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+		} else if (id.equals(3)) {
   			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
   		}
   	}

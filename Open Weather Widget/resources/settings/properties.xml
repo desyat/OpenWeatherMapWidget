@@ -1,14 +1,16 @@
 <resources>
     <properties>
     	<property id="api_key" type="string"></property>
-    	<property id="refresh_rate" type="number">60</property>
+    	<property id="refresh_rate" type="number">0</property>
     	<property id="use_garmin_location" type="boolean">true</property>
     	<property id="speed_units" type="number">0</property>
+    	<property id="pres_units" type="number">0</property>
     	<property id="units" type="string">Set in Watch settings</property>
     </properties>
 
     <settings>
         <setting propertyKey="@Properties.api_key" title="@Strings.APIKeyTitle" ><settingConfig type="alphaNumeric"/></setting>
+
         <setting propertyKey="@Properties.refresh_rate" title="@Strings.RefreshRateTitle">
             <settingConfig type="list">
             <listEntry value="0">@Strings.m0</listEntry>
@@ -20,7 +22,9 @@
             <listEntry value="240">@Strings.m240</listEntry>
             </settingConfig>
 		</setting>
+
         <setting propertyKey="@Properties.use_garmin_location" title="@Strings.UseGarminLocationTitle" ><settingConfig type="boolean" /></setting>
+
         <setting propertyKey="@Properties.speed_units" title="@Strings.SpeedUnitsTitle">
             <settingConfig type="list">
             <listEntry value="0">@Strings.SystemSpeed</listEntry>
@@ -30,6 +34,15 @@
             <listEntry value="4">@Strings.mps</listEntry>
             </settingConfig>
 		</setting>
+
+        <setting propertyKey="@Properties.pres_units" title="@Strings.PressureUnitsTitle" >
+            <settingConfig type="list">
+			<listEntry value="0">@Strings.hPa</listEntry>
+			<listEntry value="1">@Strings.inHG</listEntry>
+			<listEntry value="2">@Strings.mmHG</listEntry>
+            </settingConfig>
+		</setting>
+
         <setting propertyKey="@Properties.units" title="@Strings.UnitsTitle"><settingConfig type="alphaNumeric" readonly="true"/></setting>
     </settings>
 </resources>
