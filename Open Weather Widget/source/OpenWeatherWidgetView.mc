@@ -17,7 +17,6 @@ class OpenWeatherWidgetView extends Ui.View {
 	var gpsRequested = false;
 
 	var updateTimer = new Timer.Timer();
-	var settingsArr = $.getSettings();
     var apiKeyPresent = false;
     var locationPresent = false;
     
@@ -46,12 +45,66 @@ class OpenWeatherWidgetView extends Ui.View {
 		"50n" => Rez.Drawables.n50
 	};
 	
+	var speedUnitsCode = 1; // [4]
+	var speedMultiplier = 3.6; // [0]
+	var speedUnits = "kmh"; // [1]
+	var tempCelsius = true; // [2]
+	var tempSymbol = $.DEGREE_SYMBOL; // [3]
+	var pressureDivider = 1;
+	
     function initialize() {
         View.initialize();
+        updateSettings();
     }
 
     function updateSettings() {
-    	settingsArr = $.getSettings();
+		var MPH_IN_METERS_PER_SECOND = 2.23694;
+		var KMH_IN_METERS_PER_SECOND = 3.6;
+		var KTS_IN_METERS_PER_SECOND = 1.944;
+		
+		//var settingsArr = [KMH_IN_METERS_PER_SECOND, "kmh", true, $.DEGREE_SYMBOL, 1, 1];
+	
+		speedUnitsCode = App.Properties.getValue("speed_units");
+		speedUnitsCode = speedUnitsCode == null ? 0 : speedUnitsCode;
+		
+		var deviceSettings = Sys.getDeviceSettings();
+		// Speed multiplier and units
+		if (speedUnitsCode == 0) {
+			speedMultiplier = KMH_IN_METERS_PER_SECOND;
+			speedUnits = "kmh";
+			speedUnitsCode = 1;
+			if (deviceSettings.distanceUnits == Sys.UNIT_STATUTE) {
+				speedMultiplier = MPH_IN_METERS_PER_SECOND;
+				speedUnits = "mph";
+				speedUnitsCode = 2;
+			}
+		} else if (speedUnitsCode == 1) {
+			speedMultiplier = KMH_IN_METERS_PER_SECOND;
+			speedUnits = "kmh";
+		} else if (speedUnitsCode == 2) {
+			speedMultiplier = MPH_IN_METERS_PER_SECOND;
+			speedUnits = "mph";
+		} else if (speedUnitsCode == 3) {
+			speedMultiplier = KTS_IN_METERS_PER_SECOND;
+			speedUnits = "kts";
+		} else if (speedUnitsCode == 4) {
+			speedMultiplier = 1;
+			speedUnits = "mps";
+		} else if (speedUnitsCode == 5) {
+			speedMultiplier = 0;
+			speedUnits = "bft";
+		}
+		// Temperature in Celsius
+		tempCelsius = !(deviceSettings.temperatureUnits == Sys.UNIT_STATUTE);
+		// Temperature unit
+		if (tempCelsius) {tempSymbol = $.DEGREE_SYMBOL + "C";}
+		else {tempSymbol = $.DEGREE_SYMBOL + "F";}
+		
+		// Pressure units
+		var pressureUnits = App.Properties.getValue("pres_units");
+		pressureUnits = pressureUnits == null ? 0 : pressureUnits;
+		if (pressureUnits == 1) {pressureDivider = 33.8639;}
+		else if (pressureUnits == 2) {pressureDivider = 1.33322;}
 
     	checkApiAndLocation();
 	}
@@ -62,8 +115,6 @@ class OpenWeatherWidgetView extends Ui.View {
     	H = dc.getHeight();
     	
     	iconsFont = WatchUi.loadResource(Rez.Fonts.owm_font);
-    	
-    	checkApiAndLocation();
     	
     	// Get Weather data
     	weatherData = App.Storage.getValue("weather");
@@ -187,7 +238,7 @@ class OpenWeatherWidgetView extends Ui.View {
 		else {weatherImage = Ui.loadResource(Rez.Drawables.iq_icon);}
 
 		// Temperature
-		var convertedTemp = Math.round(settingsArr[2] ? weatherData[10] : celsius2fahrenheit(weatherData[10]));
+		var convertedTemp = Math.round(tempCelsius ? weatherData[10] : celsius2fahrenheit(weatherData[10]));
 		var tempNegative = false;
 		if (convertedTemp < 0) {
 			tempNegative = true;
@@ -198,11 +249,11 @@ class OpenWeatherWidgetView extends Ui.View {
        	drawStr(dc, 50, 14, G.FONT_SYSTEM_NUMBER_MEDIUM, 0xFFFF00, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 
        	if (tempNegative) {dc.drawText(W / 2 - tempWidth, H * 14 / 100, G.FONT_SYSTEM_NUMBER_MEDIUM, "-", G.TEXT_JUSTIFY_RIGHT | G.TEXT_JUSTIFY_VCENTER);}
-       	dc.drawText(W / 2 + tempWidth + 5, H * 14 / 100, G.FONT_SYSTEM_MEDIUM, settingsArr[3], G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
-       	//drawStr(dc, str.length() > 2 ? 75 : 67, 15, G.FONT_SYSTEM_SMALL, 0xFFFF00, settingsArr[3], G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+       	dc.drawText(W / 2 + tempWidth + 5, H * 14 / 100, G.FONT_SYSTEM_MEDIUM, tempSymbol, G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
+       	//drawStr(dc, str.length() > 2 ? 75 : 67, 15, G.FONT_SYSTEM_SMALL, 0xFFFF00, tempSymbol, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
        	
 		// Feels like
-		str = "~ " + (settingsArr[2] ? weatherData[11].format("%.0f") : celsius2fahrenheit(weatherData[11]).format("%.0f")) + settingsArr[3];
+		str = "~ " + (tempCelsius ? weatherData[11].format("%.0f") : celsius2fahrenheit(weatherData[11]).format("%.0f")) + tempSymbol;
        	drawStr(dc, 15, 30, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str, G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
 
 		if (screenNum == 1) {
@@ -212,7 +263,7 @@ class OpenWeatherWidgetView extends Ui.View {
 	       	drawStr(dc, 81, 30, iconsFont, G.COLOR_LT_GRAY, "\uF078", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 	    } else {
 			// Pressure
-			str = (weatherData[13] / settingsArr[5]).format(settingsArr[5] > 2 ? "%.2f" : "%.0f");
+			str = (weatherData[13] / pressureDivider).format(pressureDivider > 2 ? "%.2f" : "%.0f");
 	       	drawStr(dc, 66, 30, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 	       	drawStr(dc, 82, 30, iconsFont, G.COLOR_LT_GRAY, "\uF079", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 	    }
@@ -237,7 +288,7 @@ class OpenWeatherWidgetView extends Ui.View {
        	drawStr(dc, 50, 61, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str.substring(0, 21), G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 		
 		// Wind
-		str = (weatherData[14] * settingsArr[0]).format(settingsArr[4] == 4 ? "%.1f" : "%.0f") + " / " + (weatherData[15] * settingsArr[0]).format(settingsArr[4] == 4 ? "%.1f" : "%.0f") + " " + settingsArr[1];
+		str = windSpeedConvert(weatherData[14]) + " " + speedUnits + ", g" + windSpeedConvert(weatherData[15]);
        	drawStr(dc, 50, 78, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
        	drawStr(dc, 15, 78, iconsFont, G.COLOR_LT_GRAY, "\uF050", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 
@@ -263,6 +314,33 @@ class OpenWeatherWidgetView extends Ui.View {
 		$.makeOWMwebRequest(method(:onReceiveOpenWeatherMap));
 	}
 
+	function windSpeedConvert(ws) {
+		// Bft
+		if (speedUnitsCode == 5) {return msToBft(ws).format("%.0f");}
+		return (ws * speedMultiplier).format(speedUnitsCode == 4 ? "%.1f" : "%.0f");
+	}
+
+	function msToBft (ms) {
+		var bft = 0;
+		if (ms == null) {return 0;}
+	
+		if      (ms < 0.5) {bft = 0;}
+		else if (ms < 1.6) {bft = 1;}
+		else if (ms < 3.4) {bft = 2;}
+		else if (ms < 5.5) {bft = 3;}
+		else if (ms < 8.0) {bft = 4;}
+		else if (ms < 10.8) {bft = 5;}
+		else if (ms < 13.9) {bft = 6;}
+		else if (ms < 17.2) {bft = 7;}
+		else if (ms < 20.8) {bft = 8;}
+		else if (ms < 24.5) {bft = 9;}
+		else if (ms < 28.5) {bft = 10;}
+		else if (ms < 32.7) {bft = 11;}
+	    else {bft = 12;}
+	
+		return bft;
+	}
+	
 	// OWM online response call back
 	function onReceiveOpenWeatherMap(responseCode, data) {
 		// Process only if no BLE error

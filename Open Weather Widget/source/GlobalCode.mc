@@ -59,56 +59,5 @@ function windDegreeToName (windDegree) {
 
 const DEGREE_SYMBOL = "\u00B0";
 
-function getSettings() {
-
-	var MPH_IN_METERS_PER_SECOND = 2.23694;
-	var KMH_IN_METERS_PER_SECOND = 3.6;
-	var KTS_IN_METERS_PER_SECOND = 1.944;
-	
-	var settingsArr = [KMH_IN_METERS_PER_SECOND, "kmh", true, $.DEGREE_SYMBOL, 1, 1];
-
-	var speed_units = App.Properties.getValue("speed_units");
-	speed_units = speed_units == null ? 0 : speed_units;
-	settingsArr[4] = speed_units;
-	
-	var deviceSettings = Sys.getDeviceSettings();
-	// Speed multiplier and units
-	if (speed_units == 0) {
-		settingsArr[0] = KMH_IN_METERS_PER_SECOND;
-		settingsArr[1] = "kmh";
-		settingsArr[4] = 1;
-		if (deviceSettings.distanceUnits == Sys.UNIT_STATUTE) {
-			settingsArr[0] = MPH_IN_METERS_PER_SECOND;
-			settingsArr[1] = "mph";
-			settingsArr[4] = 2;
-		}
-	} else if (speed_units == 1) {
-		settingsArr[0] = KMH_IN_METERS_PER_SECOND;
-		settingsArr[1] = "kmh";
-	} else if (speed_units == 2) {
-		settingsArr[0] = MPH_IN_METERS_PER_SECOND;
-		settingsArr[1] = "mph";
-	} else if (speed_units == 3) {
-		settingsArr[0] = KTS_IN_METERS_PER_SECOND;
-		settingsArr[1] = "kts";
-	} else if (speed_units == 4) {
-		settingsArr[0] = 1;
-		settingsArr[1] = "mps";
-	}
-	// Temperature in Celsius
-	settingsArr[2] = !(deviceSettings.temperatureUnits == Sys.UNIT_STATUTE);
-	// Temperature unit
-	if (settingsArr[2]) {settingsArr[3] = $.DEGREE_SYMBOL + "C";}
-	else {settingsArr[3] = $.DEGREE_SYMBOL + "F";}
-	
-	// Pressure units
-	var pressureUnits = App.Properties.getValue("pres_units");
-	pressureUnits = pressureUnits == null ? 0 : pressureUnits;
-	if (pressureUnits == 1) {settingsArr[5] = 33.8639;}
-	else if (pressureUnits == 2) {settingsArr[5] = 1.33322;}
-
-	return settingsArr;
-}
-
 (:background)
 function p(p) {Sys.println(p);}

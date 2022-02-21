@@ -1,6 +1,6 @@
 <strings>
     <string id="AppName">Open Weather</string>
-	<string id="AppVersion">4</string>
+	<string id="AppVersion">6</string>
 
     <string id="m0">Never, refresh on the app start only</string>
     <string id="m15">15 min</string>
@@ -21,6 +21,7 @@
     <string id="mph">MPH</string>
     <string id="kts">Knots</string>
     <string id="mps">Meters/Sec</string>
+    <string id="bft">Beaufort</string>
 
 	<string id="PressureUnitsTitle">Pressure Units</string>
 	<string id="hPa">hPa</string>

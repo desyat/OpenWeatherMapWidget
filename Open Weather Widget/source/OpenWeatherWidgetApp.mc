@@ -25,12 +25,8 @@ class OpenWeatherWidgetApp extends App.AppBase {
     function getInitialView() as Array<Views or InputDelegates>? {
     	//$.p("getInitialView");
     	mainView = new OpenWeatherWidgetView();
-	    	
-    	// Check for glances. Don't re-do settings and Weather event if enabled
-    	var glanceMode = Sys.DeviceSettings has :isGlanceModeEnabled && Sys.getDeviceSettings().isGlanceModeEnabled;
-    	if (!glanceMode) {
-	    	setWeatherEvent();
-    	}
+
+		setWeatherEvent();
         return [ mainView, new OpenWeatherWidgetDelegate(mainView) ] as Array<Views or InputDelegates>;
     }
 

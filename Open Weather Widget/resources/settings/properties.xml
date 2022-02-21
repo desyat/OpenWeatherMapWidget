@@ -32,6 +32,7 @@
             <listEntry value="2">@Strings.mph</listEntry>
             <listEntry value="3">@Strings.kts</listEntry>
             <listEntry value="4">@Strings.mps</listEntry>
+            <listEntry value="5">@Strings.bft</listEntry>
             </settingConfig>
 		</setting>
 
