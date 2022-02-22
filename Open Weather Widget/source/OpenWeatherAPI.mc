@@ -34,6 +34,9 @@ function makeOWMwebRequest(callBack) {
 			Sys.LANGUAGE_SPA => "sp",
 			Sys.LANGUAGE_ITA => "it",
 			Sys.LANGUAGE_RUS => "ru",
+			Sys.LANGUAGE_POL => "pl",
+			Sys.LANGUAGE_NOB => "no",
+			Sys.LANGUAGE_DUT => "nl",
 			Sys.LANGUAGE_DEU => "de"
 			};
 			
