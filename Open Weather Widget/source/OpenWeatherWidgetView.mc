@@ -211,10 +211,15 @@ class OpenWeatherWidgetView extends Ui.View {
 		// Display error message
         if (errorMessage.length() > 0) {
         
-        	drawStr(dc, 50, 50, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, errorMessage, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
-
 			var iqImage = Ui.loadResource(Rez.Drawables.LauncherIcon);
-			dc.drawBitmap(W/2 - (iqImage.getWidth() / 2), 5, iqImage);
+
+        	if (isInstinct) {
+	        	drawStr(dc, 50, 62, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, errorMessage, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+				dc.drawBitmap(instSubscrCentr[0] - (iqImage.getWidth() / 2), instSubscrCentr[1] - (iqImage.getHeight() / 2),iqImage);
+			} else {
+	        	drawStr(dc, 40, 50, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, errorMessage, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+				dc.drawBitmap(W/2 - (iqImage.getWidth() / 2), 5, iqImage);
+			}
 
         	return;
         }
