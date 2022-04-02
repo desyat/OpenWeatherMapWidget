@@ -16,6 +16,10 @@ class OpenWeatherWidgetView extends Ui.View {
 	var screenNum = 1;
 	var gpsRequested = false;
 
+	var isInstinct = false;
+	var instSubscr = null;
+	var instSubscrCentr = null;
+
 	var updateTimer = new Timer.Timer();
     var apiKeyPresent = false;
     var locationPresent = false;
@@ -116,6 +120,19 @@ class OpenWeatherWidgetView extends Ui.View {
     	
     	iconsFont = WatchUi.loadResource(Rez.Fonts.owm_font);
     	
+    	// Instinct 2:
+        if (System.getDeviceSettings().screenShape == 4) {
+        	if (Ui has :getSubscreen && H <= 176) {
+        		instSubscr = Ui.getSubscreen();
+        		if (instSubscr != null) {
+        			instSubscrCentr = [instSubscr.x + instSubscr.width / 2, instSubscr.y + instSubscr.height / 2];
+        			isInstinct = true;
+        			W = H;
+        			p("Instinct 2");
+        		}
+        	}
+        }
+
     	// Get Weather data
     	weatherData = App.Storage.getValue("weather");
         owmRequest();
@@ -246,10 +263,14 @@ class OpenWeatherWidgetView extends Ui.View {
 		}
 		str = convertedTemp.format("%.0f");
 		var tempWidth = dc.getTextWidthInPixels(str, G.FONT_SYSTEM_NUMBER_MEDIUM) / 2;
-       	drawStr(dc, 50, 14, G.FONT_SYSTEM_NUMBER_MEDIUM, 0xFFFF00, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 
-       	if (tempNegative) {dc.drawText(W / 2 - tempWidth, H * 14 / 100, G.FONT_SYSTEM_NUMBER_MEDIUM, "-", G.TEXT_JUSTIFY_RIGHT | G.TEXT_JUSTIFY_VCENTER);}
-       	dc.drawText(W / 2 + tempWidth + 5, H * 14 / 100, G.FONT_SYSTEM_MEDIUM, tempSymbol, G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
+		var tempPositionX = 50;
+		if (isInstinct) {tempPositionX = 30;}
+       	
+   		drawStr(dc, tempPositionX, 14, G.FONT_SYSTEM_NUMBER_MEDIUM, 0xFFFF00, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+
+       	if (tempNegative) {dc.drawText(W * tempPositionX / 100 - tempWidth, H * 14 / 100, G.FONT_SYSTEM_NUMBER_MEDIUM, "-", G.TEXT_JUSTIFY_RIGHT | G.TEXT_JUSTIFY_VCENTER);}
+       	dc.drawText(W * tempPositionX / 100 + tempWidth + 5, H * 14 / 100, G.FONT_SYSTEM_MEDIUM, tempSymbol, G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
        	//drawStr(dc, str.length() > 2 ? 75 : 67, 15, G.FONT_SYSTEM_SMALL, 0xFFFF00, tempSymbol, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
        	
 		// Feels like
@@ -259,13 +280,23 @@ class OpenWeatherWidgetView extends Ui.View {
 		if (screenNum == 1) {
 			// Humidity
 			str = weatherData[12].format("%.0f") + "%";
-	       	drawStr(dc, 66, 30, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
-	       	drawStr(dc, 81, 30, iconsFont, G.COLOR_LT_GRAY, "\uF078", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+			if (isInstinct) {
+		       	dc.drawText(instSubscrCentr[0], instSubscrCentr[1] - instSubscr.height * 0.1, G.FONT_SYSTEM_SMALL, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+		       	dc.drawText(instSubscrCentr[0], instSubscrCentr[1] + instSubscr.height * 0.3, iconsFont, "\uF078", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+	       	} else {
+		       	drawStr(dc, 66, 30, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+		       	drawStr(dc, 81, 30, iconsFont, G.COLOR_LT_GRAY, "\uF078", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+	       	}
 	    } else {
 			// Pressure
 			str = (weatherData[13] / pressureDivider).format(pressureDivider > 2 ? "%.2f" : "%.0f");
-	       	drawStr(dc, 66, 30, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
-	       	drawStr(dc, 82, 30, iconsFont, G.COLOR_LT_GRAY, "\uF079", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+			if (isInstinct) {
+		       	dc.drawText(instSubscrCentr[0], instSubscrCentr[1] - instSubscr.height * 0.1, G.FONT_SYSTEM_SMALL, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+		       	dc.drawText(instSubscrCentr[0], instSubscrCentr[1] + instSubscr.height * 0.3, iconsFont, "\uF079", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+	       	} else {
+		       	drawStr(dc, 66, 30, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+		       	drawStr(dc, 82, 30, iconsFont, G.COLOR_LT_GRAY, "\uF079", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+		    }
 	    }
 
        	// Condition
@@ -274,7 +305,7 @@ class OpenWeatherWidgetView extends Ui.View {
        	dc.drawBitmap(W * 0 / 100, H * 47 / 100 - 25, weatherImage);
        	str = $.capitalize(weatherData[3]);
        	if (str.length() > 12) {
-	       	drawStr(dc, 19, 47, G.FONT_SYSTEM_MEDIUM, G.COLOR_WHITE,str, G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
+	       	drawStr(dc, (isInstinct ? 25 : 19), 47, G.FONT_SYSTEM_MEDIUM, G.COLOR_WHITE,str, G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
        	} else {
        		drawStr(dc, 50, 47, G.FONT_SYSTEM_MEDIUM, G.COLOR_WHITE,str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
        	}
@@ -290,7 +321,7 @@ class OpenWeatherWidgetView extends Ui.View {
 		// Wind
 		str = windSpeedConvert(weatherData[14]) + " " + speedUnits + ", g" + windSpeedConvert(weatherData[15]);
        	drawStr(dc, 50, 78, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
-       	drawStr(dc, 15, 78, iconsFont, G.COLOR_LT_GRAY, "\uF050", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+       	drawStr(dc, 14, 78, iconsFont, G.COLOR_LT_GRAY, "\uF050", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 
 		// Wind direction
 		str = weatherData[16].format("%.0f") + $.DEGREE_SYMBOL + " " + $.windDegreeToName(weatherData[16]);
