@@ -217,7 +217,7 @@ class OpenWeatherWidgetView extends Ui.View {
 	        	drawStr(dc, 50, 62, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, errorMessage, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 				dc.drawBitmap(instSubscrCentr[0] - (iqImage.getWidth() / 2), instSubscrCentr[1] - (iqImage.getHeight() / 2),iqImage);
 			} else {
-	        	drawStr(dc, 40, 50, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, errorMessage, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+	        	drawStr(dc, 50, 50, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, errorMessage, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 				dc.drawBitmap(W/2 - (iqImage.getWidth() / 2), 5, iqImage);
 			}
 
