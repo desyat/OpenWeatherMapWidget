@@ -316,7 +316,7 @@ class OpenWeatherWidgetView extends Ui.View {
 		dc.setColor(G.COLOR_WHITE, G.COLOR_TRANSPARENT);
 
        	// Condition
-       	dc.drawBitmap(W * 0 / 100, H * 48 / 100 - 24, weatherImage);
+       	dc.drawBitmap(W * 0 / 100, H * 48 / 100 - weatherImage.getHeight() / 2, weatherImage);
        	str = $.capitalize(weatherData[3]);
        	if (str.length() > (isInstinct ? 8 : 12)) {
 	       	drawStr(dc, (isInstinct ? 27 : 19), 48, G.FONT_SYSTEM_MEDIUM, G.COLOR_WHITE,str, G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);

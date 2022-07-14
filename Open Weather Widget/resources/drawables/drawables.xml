@@ -3,22 +3,22 @@
 
     <bitmap id="iq_icon" filename="iq_icon.png" />
 
-    <bitmap id="d01" filename="01d.png" />
-    <bitmap id="n01" filename="01n.png" />
-    <bitmap id="d02" filename="02d.png" />
-    <bitmap id="n02" filename="02n.png" />
-    <bitmap id="d03" filename="03d.png" />
-    <bitmap id="n03" filename="03n.png" />
-    <bitmap id="d04" filename="04d.png" />
-    <bitmap id="n04" filename="04n.png" />
-    <bitmap id="d09" filename="09d.png" />
-    <bitmap id="n09" filename="09n.png" />
-    <bitmap id="d10" filename="10d.png" />
-    <bitmap id="n10" filename="10n.png" />
-    <bitmap id="d11" filename="11d.png" />
-    <bitmap id="n11" filename="11n.png" />
-    <bitmap id="d13" filename="13d.png" />
-    <bitmap id="n13" filename="13n.png" />
-    <bitmap id="d50" filename="50d.png" />
-    <bitmap id="n50" filename="50n.png" />
+    <bitmap id="d01" filename="01d.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen" />
+    <bitmap id="n01" filename="01n.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="d02" filename="02d.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="n02" filename="02n.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="d03" filename="03d.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="n03" filename="03n.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="d04" filename="04d.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="n04" filename="04n.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="d09" filename="09d.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="n09" filename="09n.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="d10" filename="10d.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="n10" filename="10n.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="d11" filename="11d.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="n11" filename="11n.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="d13" filename="13d.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="n13" filename="13n.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="d50" filename="50d.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
+    <bitmap id="n50" filename="50n.png" scaleX="20%" scaleY="20%" scaleRelativeTo="screen"  />
 </drawables>
