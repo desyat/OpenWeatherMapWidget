@@ -1,6 +1,6 @@
 <strings>
     <string id="AppName">Open Weather</string>
-	<string id="AppVersion">12</string>
+    <string id="AppVersion">15</string>
 
     <string id="m0">Never, refresh on the app start only</string>
     <string id="m15">15 min</string>
