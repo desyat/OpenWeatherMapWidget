@@ -17,10 +17,10 @@
     <string id="UnitsTitle">Temperature units</string>
 
     <string id="SystemSpeed">System (Pace/Speed)</string>
-    <string id="kmh">KM/H</string>
+    <string id="kmh">km/h</string>
     <string id="mph">MPH</string>
     <string id="kts">Knots</string>
-    <string id="mps">Meters/Sec</string>
+    <string id="mps">m/s</string>
     <string id="bft">Beaufort</string>
 
 	<string id="PressureUnitsTitle">Pressure Units</string>
