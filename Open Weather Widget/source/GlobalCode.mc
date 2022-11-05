@@ -1,5 +1,6 @@
 using Toybox.Application as App;
 using Toybox.Time;
+using Toybox.WatchUi as Ui;
 using Toybox.System as Sys;
 using Toybox.WatchUi;
 using Toybox.StringUtil;
@@ -55,6 +56,39 @@ function windDegreeToName (windDegree) {
         else {windName = "N";}
 	}
 	return windName;
+}
+
+(:glance)
+function weatherToIcon(weatherData) {
+		var iconsDictionary = {
+		"01d" => Rez.Drawables.d01,
+		"01n" => Rez.Drawables.n01,
+		"02d" => Rez.Drawables.d02,
+		"02n" => Rez.Drawables.n02,
+		"03d" => Rez.Drawables.d03,
+		"03n" => Rez.Drawables.n03,
+		"04d" => Rez.Drawables.d04,
+		"04n" => Rez.Drawables.n04,
+		"09d" => Rez.Drawables.d09,
+		"09n" => Rez.Drawables.n09,
+		"10d" => Rez.Drawables.d10,
+		"10n" => Rez.Drawables.n10,
+		"11d" => Rez.Drawables.d11,
+		"11n" => Rez.Drawables.n11,
+		"13d" => Rez.Drawables.d13,
+		"13n" => Rez.Drawables.n13,
+		"50d" => Rez.Drawables.d50,
+		"50n" => Rez.Drawables.n50
+	};
+
+	var weatherImage;
+	if (iconsDictionary[weatherData[4]] != null) {
+        weatherImage = App.loadResource(iconsDictionary[weatherData[4]]);
+    } else {
+        weatherImage = App.loadResource(Rez.Drawables.LauncherIcon);
+    }
+
+	return weatherImage;
 }
 
 const DEGREE_SYMBOL = "\u00B0";

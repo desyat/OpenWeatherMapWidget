@@ -28,26 +28,7 @@ class OpenWeatherWidgetView extends Ui.View {
 	var owmRetryCount = 5;
 	var owmTimer = new Timer.Timer();
 
-	var iconsDictionary = {
-		"01d" => Rez.Drawables.d01,
-		"01n" => Rez.Drawables.n01,
-		"02d" => Rez.Drawables.d02,
-		"02n" => Rez.Drawables.n02,
-		"03d" => Rez.Drawables.d03,
-		"03n" => Rez.Drawables.n03,
-		"04d" => Rez.Drawables.d04,
-		"04n" => Rez.Drawables.n04,
-		"09d" => Rez.Drawables.d09,
-		"09n" => Rez.Drawables.n09,
-		"10d" => Rez.Drawables.d10,
-		"10n" => Rez.Drawables.n10,
-		"11d" => Rez.Drawables.d11,
-		"11n" => Rez.Drawables.n11,
-		"13d" => Rez.Drawables.d13,
-		"13n" => Rez.Drawables.n13,
-		"50d" => Rez.Drawables.d50,
-		"50n" => Rez.Drawables.n50
-	};
+
 	
 	var speedUnitsCode = 1; // [4]
 	var speedMultiplier = 3.6; // [0]
@@ -253,11 +234,8 @@ class OpenWeatherWidgetView extends Ui.View {
 		if (weatherData[15] == null) {weatherData[15] = weatherData[14];}
 		if (weatherData[16] == null) {weatherData[16] = 0;}
 		
-		var weatherImage;
+		var weatherImage = weatherToIcon(weatherData);
 		var str = "";
-		
-		if (iconsDictionary.get(weatherData[4]) != null) {weatherImage = Ui.loadResource(iconsDictionary.get(weatherData[4]));}
-		else {weatherImage = Ui.loadResource(Rez.Drawables.iq_icon);}
 
 		// Temperature
 		var convertedTemp = Math.round(tempCelsius ? weatherData[10] : celsius2fahrenheit(weatherData[10]));

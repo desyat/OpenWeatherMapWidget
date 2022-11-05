@@ -55,6 +55,10 @@ class OpenWeatherGlanceView extends Ui.GlanceView {
         	str = (tempCelsius ? weatherData[10].format("%.0f") : celsius2fahrenheit(weatherData[10]).format("%.0f")) + DEGREE_SYMBOL + (tempCelsius ? "C" : "F");
         	str += ": " + capitalize(weatherData[3]);
         }
+        if(weatherData != null && weatherData[0] != 401) {
+            var weatherImage = $.weatherToIcon(weatherData);
+            dc.drawBitmap(0, GH / 4 - weatherImage.getHeight() / 2, weatherImage);
+        }
         
         dc.drawText(0, GH*0.75, G.FONT_SYSTEM_TINY, str, G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
     }
