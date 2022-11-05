@@ -29,6 +29,7 @@ class OpenWeatherGlanceView extends Ui.GlanceView {
     function onShow() as Void {}
 
     // Update the view
+    (:glance)
     function onUpdate(dc as Dc) as Void {
         GlanceView.onUpdate(dc);
     	//p("Glance onUpdate");
@@ -37,16 +38,16 @@ class OpenWeatherGlanceView extends Ui.GlanceView {
         dc.setColor(G.COLOR_WHITE, -1);
         dc.setPenWidth(1);
         dc.drawLine(0, GH /2, GW, GH/2);
-        dc.drawText(0, GH/4, G.FONT_SYSTEM_TINY, "Open Weather", G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
+        dc.drawText(55, GH/4, G.FONT_SYSTEM_TINY, "OWM", G.TEXT_JUSTIFY_LEFT | G.TEXT_JUSTIFY_VCENTER);
         // Retrieve weather data
         var weatherData = App.Storage.getValue("weather");
         var str = "-";
 
         var apiKey = App.Properties.getValue("api_key");
-		if (apiKey == null || apiKey.length() == 0) {str = "No API key";}
-        else if (App.Storage.getValue("last_location") == null) {str = "No Location";}
+		if (apiKey == null || apiKey.length() == 0) {str = App.loadResource(Rez.Strings.NoKey);}
+        else if (App.Storage.getValue("last_location") == null) {str = App.loadResource(Rez.Strings.NoLocation);}
         
-        if (weatherData != null && weatherData[0] == 401) {str = "Invalid API key";}
+        if (weatherData != null && weatherData[0] == 401) {str = App.loadResource(Rez.Strings.InvalidKey);}
 
         if (weatherData != null && weatherData[0] == 200 && weatherData.size() > 16) {
 			if (weatherData[10] == null) {weatherData[10] = 0;}

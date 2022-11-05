@@ -33,7 +33,9 @@
     
     <string id="NoData">Waiting for data...</string>
     <string id="InvalidData">Invalid OWM Data</string>
-    <string id="InvalidKey">Invalid OWM API key</string>
+    <string id="NoKey" scope="glance">No OWM API key</string>
+    <string id="InvalidKey" scope="glance">Invalid API key</string>
+    <string id="NoLocation" scope="glance">No Location</string>
     <string id="InvalidLocation">Invalid Location</string>
     <string id="SuspendedKey">Suspended OWM\nAPI key</string>
     <string id="OWMerror">OWM Error:</string>
