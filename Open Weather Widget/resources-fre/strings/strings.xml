@@ -1,0 +1,50 @@
+<strings>
+    <string id="AppName">Open Weather</string>
+	<string id="AppVersion">12</string>
+
+    <string id="m0">Never, refresh on the app start only</string>
+    <string id="m15">15 min</string>
+    <string id="m30">30 min</string>
+    <string id="m60">1 heure</string>
+    <string id="m120">2 heures</string>
+    <string id="m180">3 heures</string>
+    <string id="m240">4 heures</string>
+
+    <string id="APIKeyTitle">Clé API Open Weather Map</string>
+    <string id="RefreshRateTitle">Intervale de mise à jour</string>
+    <string id="UseGarminLocationTitle">Use phone location provided by Garmin Weather (if available)</string>
+    <string id="SpeedUnitsTitle">Unité de vitesse</string>
+    <string id="UnitsTitle">Unité de température</string>
+
+    <string id="SystemSpeed">Système (Allure/Vitesse)</string>
+    <string id="kmh">km/h</string>
+    <string id="mph">MPH</string>
+    <string id="kts">nœuds</string>
+    <string id="mps">m/s</string>
+    <string id="bft">Beaufort</string>
+
+	<string id="PressureUnitsTitle">Unité de pression</string>
+	<string id="hPa">hPa</string>
+	<string id="inHG">inHG</string>
+	<string id="mmHG">mmHG</string>
+
+    <string id="NoLocation">Pas de localisation.\nPresser le bouton MENU\npour utiliser le GNSS.</string>
+    <string id="WaitForGPS">Attente du signal\n satellite. Merci\n de rester sur cette\nécran...</string>
+ 
+    <string id="NoData">Attente des données...</string>
+    <string id="InvalidData">Données OWM invalides</string>
+    <string id="NoKey">Pas de clé d'API OWM</string>
+    <string id="InvalidKey">Clé d'API OWM invalide</string>
+    <string id="NoLocation">Pas de localisation</string>
+    <string id="InvalidLocation">Localisation invalide</string>
+    <string id="SuspendedKey">Clé d'API OWM\nsuspendue</string>
+    <string id="OWMerror">Erreur OWM :</string>
+    <string id="NoAPIkey">Paramétrer\nla clé d'API\nOpen Weather.</string>
+
+    <string id="RefreshWeather">Mettre à jour la météo</string>
+    <string id="GetGPSlocation">Localiser avec le GNSS</string>
+	<string id="AppVersionTitle">Version</string>
+
+    <string id="ToWind">à</string>
+</strings>
+
