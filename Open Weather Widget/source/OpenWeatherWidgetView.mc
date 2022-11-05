@@ -334,7 +334,12 @@ class OpenWeatherWidgetView extends Ui.View {
 		
 		if (screenNum == 1) {
 			// Wind
-			str = windSpeedConvert(weatherData[14]) + " " + speedUnits + ", g" + windSpeedConvert(weatherData[15]);
+			str = windSpeedConvert(weatherData[14]); // Average
+			if(weatherData[14] != weatherData[15]) { // If gusts
+				 str+= " " + R(Rez.Strings.ToWind) + " "
+					 + windSpeedConvert(weatherData[15]); // Add gusts !
+			}
+			str+= " " + speedUnits;
 	       	drawStr(dc, 50, 78, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 	       	drawStr(dc, 14, 78, iconsFont, G.COLOR_LT_GRAY, "\uF050", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 	

@@ -44,5 +44,7 @@
     <string id="RefreshWeather">Request Weather refresh</string>
     <string id="GetGPSlocation">Get location from GPS</string>
 	<string id="AppVersionTitle">App Version</string>
+
+    <string id="ToWind">to</string>
 </strings>
 
