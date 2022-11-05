@@ -2,6 +2,7 @@ using Toybox.Application as App;
 using Toybox.Activity;
 using Toybox.Graphics as G;
 using Toybox.WatchUi;
+using Toybox.Attention;
 
 class MenuSettingsView extends WatchUi.Menu2 {
 
