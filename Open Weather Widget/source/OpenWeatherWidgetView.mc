@@ -8,6 +8,12 @@ using Toybox.Application as App;
 using Toybox.Position;
 using Toybox.Timer;
 
+var kmh_cst = "km/h";
+var mph_cst = "mph";
+var kts_cst = "kts";
+var ms_cst = "m/s";
+var bft_cst = "bft";
+
 class OpenWeatherWidgetView extends Ui.View {
 
 	var W;
@@ -32,7 +38,7 @@ class OpenWeatherWidgetView extends Ui.View {
 	
 	var speedUnitsCode = 1; // [4]
 	var speedMultiplier = 3.6; // [0]
-	var speedUnits = "kmh"; // [1]
+	var speedUnits = kmh_cst; // [1]
 	var tempCelsius = true; // [2]
 	var tempSymbol = $.DEGREE_SYMBOL; // [3]
 	var pressureDivider = 1;
@@ -56,28 +62,28 @@ class OpenWeatherWidgetView extends Ui.View {
 		// Speed multiplier and units
 		if (speedUnitsCode == 0) {
 			speedMultiplier = KMH_IN_METERS_PER_SECOND;
-			speedUnits = "kmh";
+			speedUnits = kmh_cst;
 			speedUnitsCode = 1;
 			if (deviceSettings.distanceUnits == Sys.UNIT_STATUTE) {
 				speedMultiplier = MPH_IN_METERS_PER_SECOND;
-				speedUnits = "mph";
+				speedUnits = mph_cst;
 				speedUnitsCode = 2;
 			}
 		} else if (speedUnitsCode == 1) {
 			speedMultiplier = KMH_IN_METERS_PER_SECOND;
-			speedUnits = "kmh";
+			speedUnits = kmh_cst;
 		} else if (speedUnitsCode == 2) {
 			speedMultiplier = MPH_IN_METERS_PER_SECOND;
-			speedUnits = "mph";
+			speedUnits = mph_cst;
 		} else if (speedUnitsCode == 3) {
 			speedMultiplier = KTS_IN_METERS_PER_SECOND;
-			speedUnits = "kts";
+			speedUnits = kts_cst;
 		} else if (speedUnitsCode == 4) {
 			speedMultiplier = 1;
-			speedUnits = "mps";
+			speedUnits = ms_cst;
 		} else if (speedUnitsCode == 5) {
 			speedMultiplier = 0;
-			speedUnits = "bft";
+			speedUnits = bft_cst;
 		}
 		// Temperature in Celsius
 		tempCelsius = !(deviceSettings.temperatureUnits == Sys.UNIT_STATUTE);
