@@ -311,11 +311,12 @@ class OpenWeatherWidgetView extends Ui.View {
 		// Time and location
 		var t = (Time.now().value() - weatherData[7]) / 60;
 		t = t < 0 ? 0 : t;
-		if (t < 120) {str = t.format("%.0f") + " min, ";}
-		else {str = (t / 60.0).format("%.0f") + " hr, ";}
+		if (t < 120) {str = t.format("%.0f") + " mn, ";}
+		else {str = (t / 60.0).format("%.0f") + " h, ";}
 		str += weatherData[5];
+       	drawStr(dc, 20, 62, iconsFont, G.COLOR_LT_GRAY, "\uF053", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
        	drawStr(dc, 50, 62, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str.substring(0, 21), G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
-		
+
 		if (screenNum == 1) {
 			// Wind
 			str = windSpeedConvert(weatherData[14]); // Average
