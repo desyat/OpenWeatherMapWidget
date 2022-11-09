@@ -29,7 +29,7 @@
 	<string id="mmHG">mmHG</string>
 
     <string id="NoLocation">Pas de localisation.\nPresser le bouton MENU\npour utiliser le GNSS.</string>
-    <string id="WaitForGPS">Attente du signal\n satellite. Merci\n de rester sur cette\nécran...</string>
+    <string id="WaitForGPS">Attente du signal\n satellite. Merci\n de rester sur cet\nécran...</string>
  
     <string id="NoData">Attente des données...</string>
     <string id="InvalidData">Données OWM invalides</string>
