@@ -40,6 +40,7 @@
     <string id="SuspendedKey">Clé d'API OWM\nsuspendue</string>
     <string id="OWMerror">Erreur OWM :</string>
     <string id="NoAPIkey">Paramétrer\nla clé d'API\nOpen Weather.</string>
+    <string id="BLE_UNAVAILABLE">Bluetooth \nnon disponible.</string>
 
     <string id="RefreshWeather">Mettre à jour la météo</string>
     <string id="GetGPSlocation">Localiser avec le GNSS</string>

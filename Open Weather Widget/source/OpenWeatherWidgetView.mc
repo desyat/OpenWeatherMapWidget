@@ -29,6 +29,8 @@ class OpenWeatherWidgetView extends Ui.View {
 	var updateTimer = new Timer.Timer();
     var apiKeyPresent = false;
     var locationPresent = false;
+	var BlePresent = false;
+	var BleTimeout = false;
     
 	var weatherData = null;
 	var owmRetryCount = 5;
@@ -145,6 +147,7 @@ class OpenWeatherWidgetView extends Ui.View {
     }
 	
     function onTimerUpdate() {
+		BleTimeout=true;
     	Ui.requestUpdate();
     }
  
@@ -181,6 +184,9 @@ class OpenWeatherWidgetView extends Ui.View {
         } else if (!locationPresent) {
         	if (gpsRequested) {errorMessage = R(Rez.Strings.WaitForGPS);}
         	else {errorMessage = R(Rez.Strings.NoLocation);}
+		} else if(!BlePresent && !BleTimeout) {
+			errorMessage = R(Rez.Strings.BLE_UNAVAILABLE);
+			updateTimer.start(method(:onTimerUpdate), 3000, false);
         } else if (weatherData == null) {
         	errorMessage = R(Rez.Strings.NoData);
         } else if (weatherData[0] == 401) {
@@ -314,7 +320,7 @@ class OpenWeatherWidgetView extends Ui.View {
 		if (t < 120) {str = t.format("%.0f") + " mn, ";}
 		else {str = (t / 60.0).format("%.0f") + " h, ";}
 		str += weatherData[5];
-       	drawStr(dc, 20, 62, iconsFont, G.COLOR_LT_GRAY, "\uF053", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
+       	drawStr(dc, 15, 62, iconsFont, G.COLOR_LT_GRAY, "\uF053", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
        	drawStr(dc, 50, 62, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str.substring(0, 21), G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 
 		if (screenNum == 1) {
@@ -363,6 +369,7 @@ class OpenWeatherWidgetView extends Ui.View {
 
 	function owmRequest() {
 		owmRetryCount = 5;
+		BleTimeout=false;
 		$.makeOWMwebRequest(method(:onReceiveOpenWeatherMap));
 	}
 
@@ -399,11 +406,15 @@ class OpenWeatherWidgetView extends Ui.View {
 		if (responseCode > 0) {
 			weatherData = $.openWeatherMapData(responseCode, data);
 			App.Storage.setValue("weather", weatherData);
+			BlePresent = true;
 			Ui.requestUpdate();
 		}
 
 		// Re-submit request if there is an error
-		if (owmRetryCount > 0 && responseCode <= 0) {
+		if(responseCode == Comms.BLE_CONNECTION_UNAVAILABLE) {
+			BlePresent = false;
+		}
+		else if (owmRetryCount > 0 && responseCode <= 0) {
 			owmRetryCount -= 1;
 			owmTimer = new Timer.Timer();
 			owmTimer.start(method(:owmRequest), 5000 - (owmRetryCount * 1000), false);
