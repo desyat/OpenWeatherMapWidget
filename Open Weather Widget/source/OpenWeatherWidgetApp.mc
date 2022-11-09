@@ -9,6 +9,7 @@ class OpenWeatherWidgetApp extends App.AppBase {
 
 	var mainView = null;
 	
+	(:glance)
     function initialize() {
         AppBase.initialize();
     }

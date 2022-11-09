@@ -1,6 +1,6 @@
 <strings>
     <string id="AppName">Open Weather</string>
-	<string id="AppVersion">12</string>
+    <string id="AppVersion">15</string>
 
     <string id="m0">Never, refresh on the app start only</string>
     <string id="m15">15 min</string>
@@ -17,10 +17,10 @@
     <string id="UnitsTitle">Temperature units</string>
 
     <string id="SystemSpeed">System (Pace/Speed)</string>
-    <string id="kmh">KM/H</string>
+    <string id="kmh">km/h</string>
     <string id="mph">MPH</string>
     <string id="kts">Knots</string>
-    <string id="mps">Meters/Sec</string>
+    <string id="mps">m/s</string>
     <string id="bft">Beaufort</string>
 
 	<string id="PressureUnitsTitle">Pressure Units</string>
@@ -33,14 +33,19 @@
     
     <string id="NoData">Waiting for data...</string>
     <string id="InvalidData">Invalid OWM Data</string>
-    <string id="InvalidKey">Invalid OWM API key</string>
+    <string id="NoKey" scope="glance">No OWM API key</string>
+    <string id="InvalidKey" scope="glance">Invalid API key</string>
+    <string id="NoLocation" scope="glance">No Location</string>
     <string id="InvalidLocation">Invalid Location</string>
     <string id="SuspendedKey">Suspended OWM\nAPI key</string>
     <string id="OWMerror">OWM Error:</string>
     <string id="NoAPIkey">Please set Open\nWeather API key in\nsettings.</string>
+    <string id="BLE_UNAVAILABLE">Bluetooth is\nunavailable.</string>
 
     <string id="RefreshWeather">Request Weather refresh</string>
     <string id="GetGPSlocation">Get location from GPS</string>
 	<string id="AppVersionTitle">App Version</string>
+
+    <string id="ToWind">to</string>
 </strings>
 

@@ -5,5 +5,6 @@ chars count=5
 char id=61520 x=0     y=30    width=33    height=16    xoffset=-1    yoffset=11    xadvance=31    page=0  chnl=15
 char id=61521 x=34    y=0     width=34    height=25    xoffset=-1    yoffset=2     xadvance=32    page=0  chnl=15
 char id=61522 x=0     y=0     width=33    height=29    xoffset=-1    yoffset=2     xadvance=32    page=0  chnl=15
+char id=61523 x=38    y=30    width=24    height=24    xoffset=-1    yoffset=12    xadvance=23    page=0  chnl=15
 char id=61560 x=91    y=0     width=15    height=19    xoffset=-1    yoffset=7     xadvance=14    page=0  chnl=15
 char id=61561 x=69    y=0     width=21    height=23    xoffset=-1    yoffset=6     xadvance=19    page=0  chnl=15

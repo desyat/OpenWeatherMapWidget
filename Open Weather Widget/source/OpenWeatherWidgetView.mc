@@ -8,6 +8,12 @@ using Toybox.Application as App;
 using Toybox.Position;
 using Toybox.Timer;
 
+var kmh_cst = "km/h";
+var mph_cst = "mph";
+var kts_cst = "kts";
+var ms_cst = "m/s";
+var bft_cst = "bft";
+
 class OpenWeatherWidgetView extends Ui.View {
 
 	var W;
@@ -23,35 +29,18 @@ class OpenWeatherWidgetView extends Ui.View {
 	var updateTimer = new Timer.Timer();
     var apiKeyPresent = false;
     var locationPresent = false;
+	var BlePresent = false;
+	var BleTimeout = false;
     
 	var weatherData = null;
 	var owmRetryCount = 5;
 	var owmTimer = new Timer.Timer();
 
-	var iconsDictionary = {
-		"01d" => Rez.Drawables.d01,
-		"01n" => Rez.Drawables.n01,
-		"02d" => Rez.Drawables.d02,
-		"02n" => Rez.Drawables.n02,
-		"03d" => Rez.Drawables.d03,
-		"03n" => Rez.Drawables.n03,
-		"04d" => Rez.Drawables.d04,
-		"04n" => Rez.Drawables.n04,
-		"09d" => Rez.Drawables.d09,
-		"09n" => Rez.Drawables.n09,
-		"10d" => Rez.Drawables.d10,
-		"10n" => Rez.Drawables.n10,
-		"11d" => Rez.Drawables.d11,
-		"11n" => Rez.Drawables.n11,
-		"13d" => Rez.Drawables.d13,
-		"13n" => Rez.Drawables.n13,
-		"50d" => Rez.Drawables.d50,
-		"50n" => Rez.Drawables.n50
-	};
+
 	
 	var speedUnitsCode = 1; // [4]
 	var speedMultiplier = 3.6; // [0]
-	var speedUnits = "kmh"; // [1]
+	var speedUnits = kmh_cst; // [1]
 	var tempCelsius = true; // [2]
 	var tempSymbol = $.DEGREE_SYMBOL; // [3]
 	var pressureDivider = 1;
@@ -75,28 +64,28 @@ class OpenWeatherWidgetView extends Ui.View {
 		// Speed multiplier and units
 		if (speedUnitsCode == 0) {
 			speedMultiplier = KMH_IN_METERS_PER_SECOND;
-			speedUnits = "kmh";
+			speedUnits = kmh_cst;
 			speedUnitsCode = 1;
 			if (deviceSettings.distanceUnits == Sys.UNIT_STATUTE) {
 				speedMultiplier = MPH_IN_METERS_PER_SECOND;
-				speedUnits = "mph";
+				speedUnits = mph_cst;
 				speedUnitsCode = 2;
 			}
 		} else if (speedUnitsCode == 1) {
 			speedMultiplier = KMH_IN_METERS_PER_SECOND;
-			speedUnits = "kmh";
+			speedUnits = kmh_cst;
 		} else if (speedUnitsCode == 2) {
 			speedMultiplier = MPH_IN_METERS_PER_SECOND;
-			speedUnits = "mph";
+			speedUnits = mph_cst;
 		} else if (speedUnitsCode == 3) {
 			speedMultiplier = KTS_IN_METERS_PER_SECOND;
-			speedUnits = "kts";
+			speedUnits = kts_cst;
 		} else if (speedUnitsCode == 4) {
 			speedMultiplier = 1;
-			speedUnits = "mps";
+			speedUnits = ms_cst;
 		} else if (speedUnitsCode == 5) {
 			speedMultiplier = 0;
-			speedUnits = "bft";
+			speedUnits = bft_cst;
 		}
 		// Temperature in Celsius
 		tempCelsius = !(deviceSettings.temperatureUnits == Sys.UNIT_STATUTE);
@@ -158,6 +147,7 @@ class OpenWeatherWidgetView extends Ui.View {
     }
 	
     function onTimerUpdate() {
+		BleTimeout=true;
     	Ui.requestUpdate();
     }
  
@@ -194,6 +184,9 @@ class OpenWeatherWidgetView extends Ui.View {
         } else if (!locationPresent) {
         	if (gpsRequested) {errorMessage = R(Rez.Strings.WaitForGPS);}
         	else {errorMessage = R(Rez.Strings.NoLocation);}
+		} else if(!BlePresent && !BleTimeout) {
+			errorMessage = R(Rez.Strings.BLE_UNAVAILABLE);
+			updateTimer.start(method(:onTimerUpdate), 3000, false);
         } else if (weatherData == null) {
         	errorMessage = R(Rez.Strings.NoData);
         } else if (weatherData[0] == 401) {
@@ -253,11 +246,8 @@ class OpenWeatherWidgetView extends Ui.View {
 		if (weatherData[15] == null) {weatherData[15] = weatherData[14];}
 		if (weatherData[16] == null) {weatherData[16] = 0;}
 		
-		var weatherImage;
+		var weatherImage = weatherToIcon(weatherData);
 		var str = "";
-		
-		if (iconsDictionary.get(weatherData[4]) != null) {weatherImage = Ui.loadResource(iconsDictionary.get(weatherData[4]));}
-		else {weatherImage = Ui.loadResource(Rez.Drawables.iq_icon);}
 
 		// Temperature
 		var convertedTemp = Math.round(tempCelsius ? weatherData[10] : celsius2fahrenheit(weatherData[10]));
@@ -327,14 +317,20 @@ class OpenWeatherWidgetView extends Ui.View {
 		// Time and location
 		var t = (Time.now().value() - weatherData[7]) / 60;
 		t = t < 0 ? 0 : t;
-		if (t < 120) {str = t.format("%.0f") + " min, ";}
-		else {str = (t / 60.0).format("%.0f") + " hr, ";}
+		if (t < 120) {str = t.format("%.0f") + " mn, ";}
+		else {str = (t / 60.0).format("%.0f") + " h, ";}
 		str += weatherData[5];
+       	drawStr(dc, 15, 62, iconsFont, G.COLOR_LT_GRAY, "\uF053", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
        	drawStr(dc, 50, 62, G.FONT_SYSTEM_SMALL, G.COLOR_LT_GRAY, str.substring(0, 21), G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
-		
+
 		if (screenNum == 1) {
 			// Wind
-			str = windSpeedConvert(weatherData[14]) + " " + speedUnits + ", g" + windSpeedConvert(weatherData[15]);
+			str = windSpeedConvert(weatherData[14]); // Average
+			if(weatherData[14] != weatherData[15]) { // If gusts
+				 str+= " " + R(Rez.Strings.ToWind) + " "
+					 + windSpeedConvert(weatherData[15]); // Add gusts !
+			}
+			str+= " " + speedUnits;
 	       	drawStr(dc, 50, 78, G.FONT_SYSTEM_SMALL, G.COLOR_WHITE, str, G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 	       	drawStr(dc, 14, 78, iconsFont, G.COLOR_LT_GRAY, "\uF050", G.TEXT_JUSTIFY_CENTER | G.TEXT_JUSTIFY_VCENTER);
 	
@@ -373,6 +369,7 @@ class OpenWeatherWidgetView extends Ui.View {
 
 	function owmRequest() {
 		owmRetryCount = 5;
+		BleTimeout=false;
 		$.makeOWMwebRequest(method(:onReceiveOpenWeatherMap));
 	}
 
@@ -409,11 +406,15 @@ class OpenWeatherWidgetView extends Ui.View {
 		if (responseCode > 0) {
 			weatherData = $.openWeatherMapData(responseCode, data);
 			App.Storage.setValue("weather", weatherData);
+			BlePresent = true;
 			Ui.requestUpdate();
 		}
 
 		// Re-submit request if there is an error
-		if (owmRetryCount > 0 && responseCode <= 0) {
+		if(responseCode == Comms.BLE_CONNECTION_UNAVAILABLE) {
+			BlePresent = false;
+		}
+		else if (owmRetryCount > 0 && responseCode <= 0) {
 			owmRetryCount -= 1;
 			owmTimer = new Timer.Timer();
 			owmTimer.start(method(:owmRequest), 5000 - (owmRetryCount * 1000), false);
